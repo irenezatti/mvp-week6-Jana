@@ -50,12 +50,18 @@ router.get("/:id/:q", async function (req, res) {
 // is this enough?
 router.post("/", async function (req, res, next) {
   try {
-    const { user_id, game_total } = req.body;
+    const { game_total } = req.body;
+    const { user_id } = req; // this will be protected by the guard
     const gameResults = await db(
       `INSERT INTO game (user_id, game_total) VALUES (${user_id}, ${game_total});`
     );
+    // when i have login user_id is not in the body
+    //this endpoint protected by the guard
+    //the front end doesnt know the user_id but only TOKEN
+  
 
     const gameId = gameResults.data.insertId;
+    // select id from game ordered  by id descendent 
 
     // this depends on my table structure but how do i approach this?
     // i need to change the column names based on this trable structure
@@ -63,8 +69,11 @@ router.post("/", async function (req, res, next) {
     await db(
       // is this even right?
       `INSERT INTO quotes_info (quote_text, solution_char, user_answer, result_points, game_id) VALUES
-      ('${quote_text}', '${solution_char}', '${user_answer}', ${result_points}, ${gameId});`
+      ('${quote_text}', '${solution_char}', '${user_answer}', ${result_points}, ${gameId});` // this last inserted
     );
+    // one game is gonna have many questions - i want to add more than 1 quote
+    //this has to be in a for loop
+    // front end is an arr with objects with quotes - for each one of these entries 
 
     const results = await db("SELECT * FROM game;");
     res.send(results.data);
