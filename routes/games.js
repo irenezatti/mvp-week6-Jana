@@ -46,36 +46,44 @@ router.get("/:id/:q", async function (req, res) {
   }
 });
 
-// i created columns named: quote_text, solution_char, user_answer, and result_points in the quotes_info table
-// is this enough?
+
+  // Germinal comment: when i have login user_id is not in the body
+    //this endpoint protected by the guard
+    //the front end doesnt know the user_id but only TOKEN
 router.post("/", async function (req, res, next) {
   try {
     const { game_total } = req.body;
-    const { user_id } = req; // this will be protected by the guard
-    const gameResults = await db(
+    const { user_id } = req; // Assuming user_id is obtained from authentication (guard)
+    //insert a new game entry
+    await db(
       `INSERT INTO game (user_id, game_total) VALUES (${user_id}, ${game_total});`
     );
-    // when i have login user_id is not in the body
-    //this endpoint protected by the guard
-    //the front end doesnt know the user_id but only TOKEN
   
+  
+   // get the latest inserted game_id - is this right??
+   const gameIdResponse = await db(
+    `SELECT id FROM game ORDER BY id DESC LIMIT 1;`
+  );
+    //get the game_id from the response - like suggested by germinal, is this how it is supposed to be done??
+    const gameId = gameIdResponse.data[0].id;
 
-    const gameId = gameResults.data.insertId;
-    // select id from game ordered  by id descendent 
+    //req.body.quotes is an array of objects containing quote information
+    // is this right??
+    const { quotes } = req.body;
 
-    // this depends on my table structure but how do i approach this?
-    // i need to change the column names based on this trable structure
-    const { quote_text, solution_char, user_answer, result_points } = req.body;
-    await db(
-      // is this even right?
-      `INSERT INTO quotes_info (quote_text, solution_char, user_answer, result_points, game_id) VALUES
-      ('${quote_text}', '${solution_char}', '${user_answer}', ${result_points}, ${gameId});` // this last inserted
-    );
-    // one game is gonna have many questions - i want to add more than 1 quote
-    //this has to be in a for loop
-    // front end is an arr with objects with quotes - for each one of these entries 
+    //insert quotes for the game using a for loop like suggested
+    for (const quote of quotes) {
+      const { quote_text, solution_char, user_answer, result_points } = quote;
 
-    const results = await db("SELECT * FROM game;");
+      await db(
+        `INSERT INTO quotes_info (quote_text, solution_char, user_answer, result_points, game_id) VALUES
+        ('${quote_text}', '${solution_char}', '${user_answer}', ${result_points}, ${gameId});`
+      );
+    }
+
+    // getting the updated game data
+    const results = await db(`SELECT * FROM game WHERE id = ${gameId};`);
+    
     res.send(results.data);
   } catch (err) {
     res.status(500).send(err.message);
