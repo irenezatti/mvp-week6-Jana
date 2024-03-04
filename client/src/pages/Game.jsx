@@ -68,13 +68,7 @@ export default function Game() {
   const [randomQuote, setRandomQuote] = useState("");
   const [char_id, setChar_id] = useState();
   const [count, setCount] = useState(0);
-  const [newItem, setNewItem] = useState({
-    q1: 0,
-    q2: 0,
-    q3: 0,
-    q4: 0,
-    q5: 0,
-  });
+  const [quotes, setQuotes] = useState([]);
   // ************************************************************************************************
 
   const options = {
@@ -201,22 +195,14 @@ export default function Game() {
   // ************************************************************************************************
 
   function updateResult(result) {
-    if (count === 0) {
-      setNewItem((state) => ({ ...state, q1: result }));
-      setCount((count) => count + 1);
-    } else if (count === 1) {
-      setNewItem((state) => ({ ...state, q2: result }));
-      setCount((count) => count + 1);
-    } else if (count === 2) {
-      setNewItem((state) => ({ ...state, q3: result }));
-      setCount((count) => count + 1);
-    } else if (count === 3) {
-      setNewItem((state) => ({ ...state, q4: result }));
-      setCount((count) => count + 1);
-    } else if (count === 4) {
-      setNewItem((state) => ({ ...state, q5: result }));
-      setCount((count) => count + 1);
-    }
+    // TODO
+    // "Push" the react way. create a new quote object and push it into the array
+    // setQuotes((state) => [
+    //   ...state,
+    //   { quote_text: randomQuote, solution_char, user_answer, result_points: 1 },
+    // ]);
+
+    setCount((count) => count + 1);
   }
 
   // ************************************************************************************************
@@ -230,7 +216,7 @@ export default function Game() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newItem),
+        body: JSON.stringify({ quotes }),
       });
 
       const data = await response.json();
@@ -280,6 +266,7 @@ export default function Game() {
           </div>
         )}
       </div>
+      <pre>{JSON.stringify(newItem, null, 4)}</pre>
       <div className="shrikhand-regular footer-right">Quote {count}/5</div>
     </>
   );
