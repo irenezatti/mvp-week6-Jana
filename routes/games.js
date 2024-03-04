@@ -34,18 +34,16 @@ router.get("/:id/sum", async function (req, res) {
   }
 });
 
-router.get("/:id/:q", async function (req, res) {
+router.get("/:id/questions", async function (req, res) {
   try {
-    const { id, q } = req.params;
-    const response = await db(
-      `SELECT user_answer FROM quotes_info WHERE game_id = ${id} AND question_id = ${q};`
-    );
+    const id = req.params.id;
+    const response = await db(`SELECT * FROM quotes_info WHERE game_id = ${id};`);
     res.send(response.data);
   } catch (err) {
     console.log(err.message);
+    res.status(500).send(err.message);
   }
 });
-
 
   // Germinal comment: when i have login user_id is not in the body
     //this endpoint protected by the guard
