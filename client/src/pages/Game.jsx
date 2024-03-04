@@ -84,7 +84,7 @@ export default function Game() {
   // ************************************************************************************************
   useEffect(() => {
     getQuotes();
-  }, [newItem]);
+  }, [count]);
 
   // ************************************************************************************************
 
@@ -201,6 +201,19 @@ export default function Game() {
     //   ...state,
     //   { quote_text: randomQuote, solution_char, user_answer, result_points: 1 },
     // ]);
+    const solutionCharacter = characters.find((c) => c._id === char_id);
+    const userAnswer = characterOptions.find(
+      (character) => character.name === result
+    );
+    setQuotes((prevQuotes) => [
+      ...prevQuotes,
+      {
+        quote_text: randomQuote,
+        solution_char: solutionCharacter.name,
+        user_answer: answer,
+        result_points: result,
+      },
+    ]);
 
     setCount((count) => count + 1);
   }
@@ -229,7 +242,6 @@ export default function Game() {
 
   return (
     <>
-      {/* <div className="solution">The count is {count}</div> */}
       <div>
         {count < 5 ? (
           <div>
@@ -252,11 +264,8 @@ export default function Game() {
           </div>
         ) : (
           <div className="end-of-game-message">
-            {" "}
             <h2 className="shrikhand-regular">
-              You have reached
-              <br />
-              the end of this journey
+              You have reached the end of this journey
             </h2>
             <div>
               <button>
@@ -266,7 +275,7 @@ export default function Game() {
           </div>
         )}
       </div>
-      <pre>{JSON.stringify(newItem, null, 4)}</pre>
+      <pre>{JSON.stringify(quotes, null, 4)}</pre>
       <div className="shrikhand-regular footer-right">Quote {count}/5</div>
     </>
   );

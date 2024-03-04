@@ -1,6 +1,40 @@
 var express = require("express");
 var router = express.Router();
 const db = require("../model/helper");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+
+//creating a backend route for login
+//copy paste from previous exercise 
+require("dotenv").config();
+const supersecret = process.env.SUPER_SECRET;
+
+router.post("/login", async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const results = await db(
+      `SELECT * FROM users WHERE username = "${username}"`
+    );
+    const user = results.data[0];
+    if (user) {
+      const user_id = user.id;
+
+      const correctPassword = await bcrypt.compare(password, user.password);
+
+      if (!correctPassword) throw new Error("Incorrect password");
+
+      var token = jwt.sign({ user_id }, supersecret);
+      res.send({ message: "Login successful, here is your token", token });
+    } else {
+      throw new Error("User does not exist");
+    }
+  } catch (err) {
+    res.status(400).send({ message: err.message });
+  }
+});
+
+
 
 /* GET games listing. */
 router.get("/", async function (req, res, next) {
@@ -48,10 +82,11 @@ router.get("/:id/questions", async function (req, res) {
   // Germinal comment: when i have login user_id is not in the body
     //this endpoint protected by the guard
     //the front end doesnt know the user_id but only TOKEN
+    // use id i need to use guard 
 router.post("/", async function (req, res, next) {
   try {
     const { game_total } = req.body;
-    const { user_id } = req; // Assuming user_id is obtained from authentication (guard)
+    const { user_id } = req; // Assuming user_id is obtained from authentication (guard)!!
     //insert a new game entry
     await db(
       `INSERT INTO game (user_id, game_total) VALUES (${user_id}, ${game_total});`
@@ -66,7 +101,6 @@ router.post("/", async function (req, res, next) {
     const gameId = gameIdResponse.data[0].id;
 
     //req.body.quotes is an array of objects containing quote information
-    // is this right??
     const { quotes } = req.body;
 
     //insert quotes for the game using a for loop like suggested
