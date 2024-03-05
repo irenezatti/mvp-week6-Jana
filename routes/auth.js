@@ -16,7 +16,7 @@ router.post("/register", async (req, res) => {
     const hash = await bcrypt.hash(password, saltRounds);
 
     await db(
-      `INSERT INTO users (username, password) VALUES ("${username}", "${hash}")`
+      `INSERT INTO users (username, password, total_points) VALUES ("${username}", "${hash}", 0)`
     );
 
     res.send({ message: "Register successful" });
