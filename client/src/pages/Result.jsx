@@ -52,6 +52,28 @@ export default function Result() {
     }
   };
 
+  // const getAnswer = async (id) => {
+  //   try {
+  //     const response = await fetch(`/api/games/${id}`);
+  //     const data = await response.json();
+  
+  //     console.log("Data from the server:", data);
+  
+  //     // Check if quotes array exists and has length
+  //     if (data[0]?.quotes && data[0].quotes.length > 0) {
+  //       setQ1(data[0].quotes[0]?.result_points === 1 ? 1 : 0);
+  //       setQ2(data[0].quotes[1]?.result_points === 1 ? 1 : 0);
+  //       setQ3(data[0].quotes[2]?.result_points === 1 ? 1 : 0);
+  //       setQ4(data[0].quotes[3]?.result_points === 1 ? 1 : 0);
+  //       setQ5(data[0].quotes[4]?.result_points === 1 ? 1 : 0);
+  //     } else {
+  //       console.log("No quotes found for this game.");
+  //     }
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
+  
   return (
     <>
       <h3 className="shrikhand-regular">You got {result} correct answers</h3>

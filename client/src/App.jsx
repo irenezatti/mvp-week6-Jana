@@ -12,7 +12,7 @@ import YouLose from "./pages/YouLose";
 import header_logo from "./assets/header_logo.png";
 import { Link } from "react-router-dom";
 import Login from "./pages/Login"; // add register page too different endpoint ofc
-
+import Register from "./pages/Register";
 
 function App() {
   return (
@@ -29,6 +29,7 @@ function App() {
           <Route path="/youwin" element={<YouWin />} />
           <Route path="/youlose" element={<YouLose />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/*" element={<Page404 />} />
           
         </Routes>
