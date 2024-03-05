@@ -210,7 +210,7 @@ export default function Game() {
       {
         quote_text: randomQuote,
         solution_char: solutionCharacter.name,
-        user_answer: answer,
+        user_answer: userAnswer,
         result_points: result,
       },
     ]);
@@ -219,6 +219,8 @@ export default function Game() {
   }
 
   // ************************************************************************************************
+  // this is protected by the guard - needs to send the token
+  // add authentication for token
   const addAnswerToDB = async (result) => {
     try {
       // the fetch(`/api/games/` means that
@@ -228,6 +230,7 @@ export default function Game() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          authorization: "Bearer " + localStorage.getItem("token"), // here we are sending the token
         },
         body: JSON.stringify({ quotes }),
       });

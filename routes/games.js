@@ -3,37 +3,7 @@ var router = express.Router();
 const db = require("../model/helper");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-
-//creating a backend route for login
-//copy paste from previous exercise 
-require("dotenv").config();
-const supersecret = process.env.SUPER_SECRET;
-
-router.post("/login", async (req, res) => {
-  const { username, password } = req.body;
-
-  try {
-    const results = await db(
-      `SELECT * FROM users WHERE username = "${username}"`
-    );
-    const user = results.data[0];
-    if (user) {
-      const user_id = user.id;
-
-      const correctPassword = await bcrypt.compare(password, user.password);
-
-      if (!correctPassword) throw new Error("Incorrect password");
-
-      var token = jwt.sign({ user_id }, supersecret);
-      res.send({ message: "Login successful, here is your token", token });
-    } else {
-      throw new Error("User does not exist");
-    }
-  } catch (err) {
-    res.status(400).send({ message: err.message });
-  }
-});
-
+const userShouldBeLoggedIn = require("../guards/userShouldBeLoggedIn"); //load it into the file and use it
 
 
 /* GET games listing. */
@@ -83,7 +53,8 @@ router.get("/:id/questions", async function (req, res) {
     //this endpoint protected by the guard
     //the front end doesnt know the user_id but only TOKEN
     // use id i need to use guard 
-router.post("/", async function (req, res, next) {
+
+router.post("/", userShouldBeLoggedIn, async function (req, res, next) {
   try {
     const { game_total } = req.body;
     const { user_id } = req; // Assuming user_id is obtained from authentication (guard)!!

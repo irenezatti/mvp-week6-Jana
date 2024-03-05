@@ -5,12 +5,6 @@ var jwt = require("jsonwebtoken");
 require("dotenv").config();
 const supersecret = process.env.SUPER_SECRET;
 
-router.get("/profile", userShouldBeLoggedIn, function (req, res, next) {
-    res.send({
-      message: "Here is the PROTECTED data for user " + req.user_id,
-    });
-  });
-  
 //function userShouldBeLoggedIn
 function userShouldBeLoggedIn(req, res, next) {
   const token = req.headers["authorization"].replace(/^Bearer\s/, "");
