@@ -185,7 +185,7 @@ export default function Game() {
     if (answer === rightCharacter.name) {
       const result = 1;
       console.log(result);
-      updateResult(result);
+      updateResult(result, answer);
     } else {
       const result = 0;
       console.log(result);
@@ -194,7 +194,7 @@ export default function Game() {
   }
   // ************************************************************************************************
 
-  function updateResult(result) {
+  function updateResult(result, answer) {
     // TODO
     // "Push" the react way. create a new quote object and push it into the array
     // setQuotes((state) => [
@@ -202,15 +202,13 @@ export default function Game() {
     //   { quote_text: randomQuote, solution_char, user_answer, result_points: 1 },
     // ]);
     const solutionCharacter = characters.find((c) => c._id === char_id);
-    const userAnswer = characterOptions.find(
-      (character) => character.name === result
-    );
+
     setQuotes((prevQuotes) => [
       ...prevQuotes,
       {
         quote_text: randomQuote,
         solution_char: solutionCharacter.name,
-        user_answer: userAnswer,
+        user_answer: answer,
         result_points: result,
       },
     ]);
