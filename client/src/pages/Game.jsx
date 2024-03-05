@@ -174,6 +174,7 @@ export default function Game() {
 
   function storeAnswer(event) {
     const answer = event.target.textContent;
+    console.log("User's answer:", answer); //to check if this works
     compareToSolution(answer);
   }
   // ************************************************************************************************
@@ -182,16 +183,16 @@ export default function Game() {
     const rightCharacter = characters.find(
       (character) => character._id === char_id
     );
-    if (answer === rightCharacter.name) {
-      const result = 1;
-      console.log(result);
-      updateResult(result, answer);
-    } else {
-      const result = 0;
-      console.log(result);
-      updateResult(result);
-    }
-  }
+  
+    const result = answer === rightCharacter.name ? 1 : 0;
+  
+    console.log("User's answer:", answer); //to check if it works
+  
+    updateResult(result, answer);
+  }  
+
+  //it works!!
+  
   // ************************************************************************************************
 
   function updateResult(result, answer) {
@@ -249,7 +250,7 @@ export default function Game() {
             <div className="quoteBox bad-script-regular">
               {randomQuote && <p>{randomQuote}</p>}
             </div>
-
+  
             <h5 className="questionbox">Who said this? Answer here:</h5>
             <div>
               {characterOptions.map((character) => (
@@ -276,7 +277,16 @@ export default function Game() {
           </div>
         )}
       </div>
-      <pre>{JSON.stringify(quotes, null, 4)}</pre>
+      <div className="result-section">
+        {quotes.map((quote, index) => (
+          <div key={index} className="result-item">
+            <p>{quote.quote_text}</p>
+            <p>Solution: {quote.solution_char}</p>
+            <p>Your Answer: {quote.user_answer}</p>
+            <p>Result: {quote.result_points === 1 ? "Correct" : "Incorrect"}</p>
+          </div>
+        ))}
+      </div>
       <div className="shrikhand-regular footer-right">Quote {count}/5</div>
     </>
   );
