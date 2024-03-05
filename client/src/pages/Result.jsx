@@ -52,6 +52,12 @@ export default function Result() {
     }
   };
 
+
+  // this still does not work
+  // i think the issue is in the const getAnswer but i cant figure out how to change it
+  // i think i broke it and cannot fix it??
+
+  
   // const getAnswer = async (id) => {
   //   try {
   //     const response = await fetch(`/api/games/${id}`);
